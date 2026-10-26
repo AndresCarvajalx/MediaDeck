@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MediaDeck</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <main id="media-list" class="media-list"></main>
+
+    <div id="empty-state" class="empty-state hidden">
+      <div class="empty-icon-wrap">
+        <svg class="empty-icon" viewBox="0 0 48 48" fill="none">
+          <circle cx="24" cy="24" r="22" stroke="currentColor" stroke-width="2" stroke-dasharray="4 4"/>
+          <path d="M18 16 L24 14 L24 28 C23 27 21.5 26.5 20 27 C17.8 27.8 16.5 30 17 31.8 C17.5 33.6 19.8 34.5 22 33.7 C23.8 33 24.8 31.2 24.8 29.5 L24.8 18 L18 19.8 Z" fill="currentColor"/>
+          <rect x="27" y="16" width="11" height="2.5" rx="1.25" fill="currentColor" />
+          <rect x="27" y="22" width="11" height="2.5" rx="1.25" fill="currentColor" />
+          <rect x="27" y="28" width="7" height="2.5" rx="1.25" fill="currentColor" />
+        </svg>
+      </div>
+      <h2 class="empty-title">Sin reproducción activa</h2>
+      <p class="empty-desc">Reproduce un video o audio en YouTube, Twitch, Spotify u otra pestaña para controlarlo desde aquí.</p>
+    </div>
+
+    <footer class="footer-panel">
+      <div class="footer-row" id="cc-row">
+        <div class="footer-left">
+          <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="4" width="20" height="16" rx="3" />
+            <path d="M7 15h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2H7v6zM15 15h2a2 2 0 0 0 2-2v-2a2 2 0 0 0-2-2h-2v6z" />
+          </svg>
+          <span class="footer-label">Subtítulos (CC)</span>
+        </div>
+        <label class="switch">
+          <input type="checkbox" id="global-cc-toggle">
+          <span class="slider round"></span>
+        </label>
+      </div>
+
+      <div id="quick-settings-panel" class="quick-settings-panel collapsed">
+        <div class="settings-content">
+          <div class="setting-item">
+            <span class="setting-title">Volumen Activo</span>
+            <div class="volume-control-wrap">
+              <button class="icon-btn-tiny" id="quick-mute-btn" title="Silenciar / Activar sonido">
+                <svg id="quick-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
+                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
+                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
+                </svg>
+              </button>
+              <input type="range" id="quick-volume-slider" min="0" max="1" step="0.05" value="1" class="mini-slider">
+              <span id="quick-volume-text" class="vol-percentage">100%</span>
+            </div>
+          </div>
+
+          <div class="setting-item">
+            <span class="setting-title">Velocidad</span>
+            <div class="speed-chips" id="speed-chips">
+              <button class="chip" data-speed="0.75">0.75x</button>
+              <button class="chip active" data-speed="1">1.0x</button>
+              <button class="chip" data-speed="1.25">1.25x</button>
+              <button class="chip" data-speed="1.5">1.5x</button>
+              <button class="chip" data-speed="2">2.0x</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-row footer-clickable" id="toggle-settings-row">
+        <div class="footer-left">
+          <svg class="footer-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="3" />
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z" />
+          </svg>
+          <span class="footer-label">Ajustes de reproducción</span>
+        </div>
+        <div class="footer-right">
+          <svg id="settings-chevron" class="chevron-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="6 9 12 15 18 9" />
+          </svg>
+        </div>
+      </div>
+
+      <div class="branding-bar">
+        <span>MediaDeck</span>
+        <a href="https://github.com/AndresCarvajalx/MediaDeck" target="_blank" rel="noopener noreferrer" class="author-link" title="Visitar GitHub de AndresCarvajalx">
+          by @AndresCarvajalx
+        </a>
+      </div>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

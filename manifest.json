@@ -1,0 +1,50 @@
+{
+  "manifest_version": 3,
+  "name": "MediaDeck",
+  "version": "1.0.0",
+  "description": "Control global de reproducción multimedia para Firefox: pausa, adelanta, rebobina, PiP, subtítulos y volumen desde cualquier pestaña.",
+  "author": "AndresCarvajalx",
+  "homepage_url": "https://github.com/AndresCarvajalx/MediaDeck",
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "mediadeck@andrescarvajalx",
+      "strict_min_version": "109.0"
+    }
+  },
+  "permissions": [
+    "activeTab",
+    "tabs",
+    "scripting",
+    "storage"
+  ],
+  "host_permissions": [
+    "<all_urls>"
+  ],
+  "action": {
+    "default_popup": "popup/popup.html",
+    "default_title": "MediaDeck",
+    "default_icon": {
+      "16": "icons/icon-16.png",
+      "32": "icons/icon-32.png",
+      "48": "icons/icon-48.png",
+      "128": "icons/icon-128.png"
+    }
+  },
+  "background": {
+    "scripts": ["background/background.js"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content/content.js"],
+      "run_at": "document_idle",
+      "all_frames": true
+    }
+  ],
+  "icons": {
+    "16": "icons/icon-16.png",
+    "32": "icons/icon-32.png",
+    "48": "icons/icon-48.png",
+    "128": "icons/icon-128.png"
+  }
+}
