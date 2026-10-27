@@ -80,7 +80,7 @@
       action: action,
       ...params
     }).catch(err => {
-      console.warn('GMC: Action dispatch error', err);
+      console.warn('MediaDeck: Action dispatch error', err);
     });
   }
 
@@ -115,10 +115,10 @@
 
     emptyStateContainer.classList.add('hidden');
 
-    if (!activeMediaItem || !currentMediaList.some(m => m.mediaId === activeMediaItem.mediaId)) {
+    if (!activeMediaItem || !currentMediaList.some(m => m.tabId === activeMediaItem.tabId)) {
       activeMediaItem = currentMediaList.find(m => !m.paused) || currentMediaList[0];
     } else {
-      const updated = currentMediaList.find(m => m.mediaId === activeMediaItem.mediaId);
+      const updated = currentMediaList.find(m => m.tabId === activeMediaItem.tabId);
       if (updated) activeMediaItem = updated;
     }
     updateQuickSettings(activeMediaItem);
@@ -130,20 +130,21 @@
 
     const existingCards = new Map();
     mediaListContainer.querySelectorAll('.media-card').forEach(card => {
-      const id = card.getAttribute('data-media-id');
-      existingCards.set(id, card);
+      const tid = card.getAttribute('data-tab-id');
+      if (tid) existingCards.set(tid, card);
     });
 
-    const newIds = new Set(currentMediaList.map(m => m.mediaId));
+    const newTabIds = new Set(currentMediaList.map(m => String(m.tabId)));
 
-    existingCards.forEach((card, id) => {
-      if (!newIds.has(id)) {
+    existingCards.forEach((card, tid) => {
+      if (!newTabIds.has(tid)) {
         card.remove();
       }
     });
 
     currentMediaList.forEach(media => {
-      let card = existingCards.get(media.mediaId);
+      const tid = String(media.tabId);
+      let card = existingCards.get(tid);
       if (!card) {
         card = createCardElement(media);
         mediaListContainer.appendChild(card);
@@ -157,8 +158,8 @@
 
   function updateSelectedCardVisual() {
     mediaListContainer.querySelectorAll('.media-card').forEach(card => {
-      const id = card.getAttribute('data-media-id');
-      if (activeMediaItem && id === activeMediaItem.mediaId) {
+      const tid = parseInt(card.getAttribute('data-tab-id'), 10);
+      if (activeMediaItem && tid === activeMediaItem.tabId) {
         card.classList.add('selected');
       } else {
         card.classList.remove('selected');
@@ -300,7 +301,7 @@
 
   function updateExistingDOM(mediaList) {
     mediaList.forEach(m => {
-      const card = mediaListContainer.querySelector(`.media-card[data-media-id="${m.mediaId}"]`);
+      const card = mediaListContainer.querySelector(`.media-card[data-tab-id="${m.tabId}"]`);
       if (card) updateCardElement(card, m);
     });
   }
@@ -311,8 +312,8 @@
     const getMediaId = () => card.getAttribute('data-media-id') || media.mediaId;
 
     const selectCard = () => {
-      const id = getMediaId();
-      const selected = currentMediaList.find(m => m.mediaId === id);
+      const tid = getTabId();
+      const selected = currentMediaList.find(m => m.tabId === tid);
       if (selected) {
         activeMediaItem = selected;
         updateQuickSettings(activeMediaItem);
@@ -320,7 +321,6 @@
       }
     };
 
-    // Click on card selects it for quick settings
     card.addEventListener('click', (e) => {
       if (e.target.closest('button, input, a, .slider')) return;
       selectCard();
@@ -363,36 +363,73 @@
       pipBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         selectCard();
+        pipBtn.classList.toggle('active');
         sendMediaAction(getTabId(), getMediaId(), 'TOGGLE_PIP');
       });
     }
 
-    // Play / Pause Button
+    // Play / Pause Button with immediate optimistic feedback
     const playPauseBtn = card.querySelector('.btn-play-pause');
     if (playPauseBtn) {
       playPauseBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         selectCard();
+
+        const isCurrentlyPaused = playPauseBtn.innerHTML.includes('M8 5v14l11-7z');
+        playPauseBtn.innerHTML = isCurrentlyPaused ? ICONS.pause : ICONS.play;
+        playPauseBtn.title = isCurrentlyPaused ? 'Pausar' : 'Reproducir';
+        media.paused = !isCurrentlyPaused;
+
         sendMediaAction(getTabId(), getMediaId(), 'TOGGLE_PLAY');
       });
     }
 
-    // Rewind 10s
+    // Rewind 10s with immediate UI response
     const rewindBtn = card.querySelector('.rewind-btn');
     if (rewindBtn) {
       rewindBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         selectCard();
+
+        const slider = card.querySelector('.seeker-slider');
+        const curTimeText = card.querySelector('.current-time-text');
+        const fill = card.querySelector('.seeker-fill');
+        const thumb = card.querySelector('.seeker-thumb');
+        if (slider) {
+          const newTime = Math.max(0, (parseFloat(slider.value) || 0) - 10);
+          slider.value = newTime;
+          if (curTimeText) curTimeText.textContent = formatTime(newTime);
+          const max = parseFloat(slider.max) || 100;
+          const pct = Math.min(100, Math.max(0, (newTime / max) * 100));
+          if (fill) fill.style.width = `${pct}%`;
+          if (thumb) thumb.style.left = `${pct}%`;
+        }
+
         sendMediaAction(getTabId(), getMediaId(), 'SKIP_BACKWARD', { seconds: 10 });
       });
     }
 
-    // Forward 10s
+    // Forward 10s with immediate UI response
     const forwardBtn = card.querySelector('.forward-btn');
     if (forwardBtn) {
       forwardBtn.addEventListener('click', (e) => {
         e.stopPropagation();
         selectCard();
+
+        const slider = card.querySelector('.seeker-slider');
+        const curTimeText = card.querySelector('.current-time-text');
+        const fill = card.querySelector('.seeker-fill');
+        const thumb = card.querySelector('.seeker-thumb');
+        if (slider) {
+          const max = parseFloat(slider.max) || 100;
+          const newTime = Math.min(max, (parseFloat(slider.value) || 0) + 10);
+          slider.value = newTime;
+          if (curTimeText) curTimeText.textContent = formatTime(newTime);
+          const pct = Math.min(100, Math.max(0, (newTime / max) * 100));
+          if (fill) fill.style.width = `${pct}%`;
+          if (thumb) thumb.style.left = `${pct}%`;
+        }
+
         sendMediaAction(getTabId(), getMediaId(), 'SKIP_FORWARD', { seconds: 10 });
       });
     }
@@ -444,7 +481,7 @@
         if (curTimeText) curTimeText.textContent = formatTime(val);
       });
 
-      const finishSeek = (e) => {
+      const finishSeek = () => {
         isDraggingSlider = false;
         const targetTime = parseFloat(slider.value);
         if (!isNaN(targetTime)) {
@@ -567,7 +604,7 @@
         renderMediaCards(response.media);
       }
     }).catch(err => {
-      console.warn('GMC: Initial fetch error', err);
+      console.warn('MediaDeck: Initial fetch error', err);
     });
   }
 
