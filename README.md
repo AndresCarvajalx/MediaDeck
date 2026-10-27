@@ -20,9 +20,13 @@
 - **Closed Captions (CC):** Bottom-bar toggle to enable or disable captions where supported.
 - **Volume and Mute Control:** Dedicated slider and toggle button to adjust volume or mute the active media item.
 - **Playback Speed Selector:** Quick speed selector chips (0.75x, 1.0x, 1.25x, 1.5x, 2.0x).
-- **Dark Theme Interface:** Clean, native-feeling dark theme styled with subtle borders and purple accent highlights.
 
 ---
+
+---
+
+## Preview
+https://github.com/user-attachments/assets/d2ac38fa-8a3a-4f66-b95e-0ecf171f1500
 
 ## Project Structure
 
