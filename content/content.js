@@ -366,9 +366,16 @@
     btn.className = 'ytp-button ytp-mediadeck-pip';
     btn.title = 'Picture-in-Picture (MediaDeck)';
     btn.style.cssText = 'vertical-align: top; display: inline-flex; align-items: center; justify-content: center; width: 46px; height: 100%;';
-    btn.innerHTML = `<svg height="100%" version="1.1" viewBox="0 0 36 36" width="100%" style="width: 22px; height: 22px; fill: #fff;">
-      <path d="M25,17 L17,17 L17,23 L25,23 L25,17 Z M29,25 L29,11 C29,9.9 28.1,9 27,9 L9,9 C7.9,9 7,9.9 7,11 L7,25 C7,26.1 7.9,27 9,27 L27,27 C28.1,27 29,26.1 29,25 Z M27,25 L9,25 L9,11 L27,11 L27,25 Z" />
-    </svg>`;
+    const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+    svg.setAttribute('height', '100%');
+    svg.setAttribute('version', '1.1');
+    svg.setAttribute('viewBox', '0 0 36 36');
+    svg.setAttribute('width', '100%');
+    svg.style.cssText = 'width: 22px; height: 22px; fill: #fff;';
+    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+    path.setAttribute('d', 'M25,17 L17,17 L17,23 L25,23 L25,17 Z M29,25 L29,11 C29,9.9 28.1,9 27,9 L9,9 C7.9,9 7,11 L7,25 C7,26.1 7.9,27 9,27 L27,27 C28.1,27 29,26.1 29,25 Z M27,25 L9,25 L9,11 L27,11 L27,25 Z');
+    svg.appendChild(path);
+    btn.appendChild(svg);
 
     btn.onclick = (e) => {
       e.preventDefault();

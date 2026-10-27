@@ -8,3 +8,6 @@ $RECYCLE.BIN/
 # Temporary files
 *.tmp
 *.log
+
+# Package archives
+*.zip

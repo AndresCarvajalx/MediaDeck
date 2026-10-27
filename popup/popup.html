@@ -45,11 +45,13 @@
             <span class="setting-title">Volumen Activo</span>
             <div class="volume-control-wrap">
               <button class="icon-btn-tiny" id="quick-mute-btn" title="Silenciar / Activar sonido">
-                <svg id="quick-vol-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5" fill="currentColor"/>
-                  <path d="M15.54 8.46a5 5 0 0 1 0 7.07" />
-                  <path d="M19.07 4.93a10 10 0 0 1 0 14.14" />
-                </svg>
+                <span id="quick-vol-icon-container">
+                  <svg id="quick-vol-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+                    <path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2"/>
+                    <path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2"/>
+                  </svg>
+                </span>
               </button>
               <input type="range" id="quick-volume-slider" min="0" max="1" step="0.05" value="1" class="mini-slider">
               <span id="quick-volume-text" class="vol-percentage">100%</span>
@@ -92,6 +94,125 @@
       </div>
     </footer>
   </div>
+
+  <!-- Safe DOM Templates (No innerHTML) -->
+  <template id="tmpl-icon-play">
+    <svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z" fill="currentColor"/></svg>
+  </template>
+
+  <template id="tmpl-icon-pause">
+    <svg viewBox="0 0 24 24"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" fill="currentColor"/></svg>
+  </template>
+
+  <template id="tmpl-icon-prev">
+    <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z" fill="currentColor"/></svg>
+  </template>
+
+  <template id="tmpl-icon-next">
+    <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z" fill="currentColor"/></svg>
+  </template>
+
+  <template id="tmpl-icon-rewind10">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/>
+      <text x="12" y="14.8" font-size="7" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle" fill="currentColor">10</text>
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-forward10">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <path d="M12 5V1l5 5-5 5V7c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6h2c0 4.42-3.58 8-8 8s-8-3.58-8-8 3.58-8 8-8z"/>
+      <text x="12" y="14.8" font-size="7" font-weight="bold" font-family="system-ui, sans-serif" text-anchor="middle" fill="currentColor">10</text>
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-pip">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <rect x="3" y="5" width="18" height="14" rx="2"/>
+      <rect x="13" y="11" width="6" height="6" rx="1" fill="currentColor"/>
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-focusTab">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/>
+      <polyline points="15 3 21 3 21 9"/>
+      <line x1="10" y1="14" x2="21" y2="3"/>
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-musicNote">
+    <svg class="artwork-placeholder" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <path d="M9 18V5l12-2v13" />
+      <circle cx="6" cy="18" r="3" fill="currentColor" />
+      <circle cx="18" cy="16" r="3" fill="currentColor" />
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-volHigh">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <path d="M15.54 8.46a5 5 0 0 1 0 7.07" fill="none" stroke="currentColor" stroke-width="2"/>
+      <path d="M19.07 4.93a10 10 0 0 1 0 14.14" fill="none" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </template>
+
+  <template id="tmpl-icon-volMute">
+    <svg viewBox="0 0 24 24" fill="currentColor">
+      <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+      <line x1="23" y1="9" x2="17" y2="15" stroke="currentColor" stroke-width="2"/>
+      <line x1="17" y1="9" x2="23" y2="15" stroke="currentColor" stroke-width="2"/>
+    </svg>
+  </template>
+
+  <template id="tmpl-media-card">
+    <div class="media-card">
+      <div class="card-top">
+        <div class="artwork-container" title="Ir a pestaña">
+          <img class="artwork-img" alt="Cover" style="display:none;">
+          <div class="artwork-placeholder-wrap"></div>
+        </div>
+
+        <div class="media-details">
+          <div class="source-header">
+            <div class="domain-badge">
+              <img class="domain-favicon" alt="Favicon" style="display:none;">
+              <span class="domain-name"></span>
+            </div>
+            <div class="top-actions">
+              <button class="btn-icon-subtle pip-btn" title="Activar Picture-in-Picture"></button>
+              <button class="btn-icon-subtle focus-tab-btn" title="Ir a la pestaña"></button>
+            </div>
+          </div>
+
+          <div class="media-title"></div>
+          <div class="media-artist"></div>
+        </div>
+
+        <button class="btn-play-pause" title="Reproducir"></button>
+      </div>
+
+      <div class="card-controls">
+        <button class="control-btn prev-btn" title="Anterior"></button>
+        <button class="control-btn rewind-btn" title="Rebobinar 10s"></button>
+
+        <div class="seeker-container">
+          <div class="seeker-track">
+            <div class="seeker-fill" style="width: 0%"></div>
+            <div class="seeker-thumb" style="left: 0%"></div>
+          </div>
+          <input type="range" class="seeker-slider" min="0" max="100" step="0.5" value="0">
+          <div class="seeker-times">
+            <span class="current-time-text">0:00</span>
+            <span class="duration-text">0:00</span>
+          </div>
+        </div>
+
+        <button class="control-btn forward-btn" title="Adelantar 10s"></button>
+        <button class="control-btn next-btn" title="Siguiente"></button>
+      </div>
+    </div>
+  </template>
 
   <script src="popup.js"></script>
 </body>

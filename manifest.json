@@ -2,13 +2,18 @@
   "manifest_version": 3,
   "name": "MediaDeck",
   "version": "1.0.0",
-  "description": "Control global de reproducción multimedia para Firefox: pausa, adelanta, rebobina, PiP, subtítulos y volumen desde cualquier pestaña.",
+  "description": "Global media playback control for Firefox: play, pause, seek, PiP, subtitles, volume and speed across all your tabs.",
   "author": "AndresCarvajalx",
   "homepage_url": "https://github.com/AndresCarvajalx/MediaDeck",
   "browser_specific_settings": {
     "gecko": {
       "id": "mediadeck@andrescarvajalx",
-      "strict_min_version": "109.0"
+      "strict_min_version": "140.0",
+      "data_collection_permissions": {
+        "required": [
+          "none"
+        ]
+      }
     }
   },
   "permissions": [
