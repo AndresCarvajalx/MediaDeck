@@ -22,3 +22,9 @@
 - **Playback Speed Selector:** Quick speed selector chips (0.75x, 1.0x, 1.25x, 1.5x, 2.0x).
 
 ---
+
+## Preview
+https://github.com/user-attachments/assets/d2ac38fa-8a3a-4f66-b95e-0ecf171f1500
+
+
+
